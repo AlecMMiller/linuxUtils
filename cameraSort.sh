@@ -8,7 +8,7 @@ cp /media/danielle/2973-789E/DCIM/*/*.JPG dontTouch -r
 
 printf "Sorting by tags\n"
 for f in dontTouch/*.JPG ; 
-do TAG=`exif "$f" -t 0x9c9e -m` && DATE=`exif "$f" -t 0x0132 -m` && echo $f has tag $TAG && mkdir -p dontTouch/$TAG && mv $f dontTouch/$TAG/;
+do TAG=`exif "$f" -t 0x9c9e -m` && DATE=`exif "$f" -t 0x0132 -m` && echo $f has tag $TAG && mkdir -p dontTouch/"$TAG" && mv $f dontTouch/"$TAG"/;
 done
 
 printf "Sorting by date\n"
@@ -31,5 +31,10 @@ for f in dontTouch/*.JPG ;
   do echo $f is untagged && mkdir -p dontTouch/Untagged && mv $f dontTouch/Untagged/;
 done
 
-printf "Returning to console\n"
-exec bash
+rmdir dontTouch/Untagged/
+
+printf "Moving to final directory\n"
+cp -rl dontTouch/* ~/Google\ Drive/Photos
+
+printf "Deleting temporary directory\n"
+rm -rf dontTouch
